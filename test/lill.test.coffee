@@ -33,7 +33,7 @@ describe 'Lill', ->
 			toThrow 'frozen', -> Lill.attach Object.freeze({})
 
 	expectAttached = (fnName) ->
-		expect(-> Lill[fnName]({})).to.throw TypeError, /has to be attached/
+		expect(-> Lill[fnName]({})).to.throw TypeError, /attach/
 
 	expectItem = (owner, fnName) ->
 		toThrow = (msg, fn) -> 
