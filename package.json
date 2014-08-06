@@ -1,7 +1,7 @@
 {
   "name": "lill",
   "description": "Lightweight linked list implementation with small memory footprint.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "keywords": [
     "linked-list",

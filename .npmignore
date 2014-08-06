@@ -2,7 +2,7 @@ node_modules
 bin
 src
 test
-lill.*
+lill.sublime-*
 .travis.yml
 .gitignore
 bower.json

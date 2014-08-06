@@ -1,6 +1,6 @@
 {
   "name": "lill",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "authors": [
     "FredyC <fredy.c@seznam.cz>"
   ],
@@ -29,6 +29,7 @@
     ".npmignore",
     ".travis.yml",
     "lill.*",
-    "package.json"
+    "package.json",
+    ".gitignore"
   ]
 }
