@@ -1,0 +1,8 @@
+node_modules
+bin
+src
+test
+lill.*
+.travis.yml
+.gitignore
+bower.json

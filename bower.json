@@ -1,0 +1,34 @@
+{
+  "name": "lill",
+  "version": "0.0.1",
+  "authors": [
+    "FredyC <fredy.c@seznam.cz>"
+  ],
+  "description": "Lightweight linked list implementation with small memory footprint.",
+  "main": "lib/lill-browser.js",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "linked-list",
+    "linked",
+    "list",
+    "es6",
+    "symbol",
+    "lightweight"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/FredyC/lill",
+  "ignore": [
+    "node_modules",
+    "bin",
+    "test",
+    "src",
+    ".npmignore",
+    ".travis.yml",
+    "lill.*",
+    "package.json"
+  ]
+}

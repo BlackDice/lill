@@ -1,0 +1,5 @@
+node_modules
+.DS_Store
+desktop.ini
+*.sublime-workspace
+npm-debug.log

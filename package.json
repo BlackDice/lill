@@ -1,0 +1,42 @@
+{
+  "name": "lill",
+  "description": "Lightweight linked list implementation with small memory footprint.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "keywords": [
+    "linked-list",
+    "linked",
+    "list",
+    "es6",
+    "symbol",
+    "lightweight"
+  ],
+  "author": {
+    "name": "FredyC",
+    "email": "fredy.c@seznam.cz"
+  },
+  "homepage": "https://github.com/FredyC/lill",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:FredyC/lill.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FredyC/lill/issues"
+  },
+  "main": "lib/lill.js",
+  "scripts": {
+    "test": "node_modules/.bin/mocha"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.7.1",
+    "chai": "^1.9.1",
+    "mocha": "^1.21.3",
+    "sinon-chai": "^2.5.0",
+    "sinon": "^1.10.3",
+    "uglify-js": "^2.4.15",
+    "browserify": "^5.9.1"
+  },
+  "dependencies": {
+    "es6-symbol": "^0.1.0"
+  }
+}
