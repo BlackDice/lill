@@ -76,11 +76,11 @@ This is hardly enough. You probably want to know where the list begins or eventu
 
 Now you could iterate the list very easily like this
 
-  var item = Lill.getHead(owner)
-  while (item) {
-  	// do your work with the item
-  	item = item[ sNext ]
-  }
+	var item = Lill.getHead(owner)
+	while (item) {
+		// do your work with the item
+		item = item[ sNext ]
+	}
 
 If you want more convenient way or maybe separate logic to the function, LiLL contains one easy to use method for this with little added bonus in form of 0-based index of item in the list.
 
