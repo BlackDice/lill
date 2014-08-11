@@ -2,7 +2,7 @@
 
 *Lightweight linked list implementation with small memory footprint.*
 
-[![Build Status](https://travis-ci.org/FredyC/lill.svg)](https://travis-ci.org/FredyC/lill)[![Dependencies status](https://david-dm.org/FredyC/lill/status.svg)](https://david-dm.org/FredyC/lill#info=dependencies)[![devDependency Status](https://david-dm.org/FredyC/lill/dev-status.svg)](https://david-dm.org/FredyC/lill#info=devDependencies)
+[![Build Status](https://travis-ci.org/BlackDice/lill.svg)](https://travis-ci.org/BlackDice/lill)[![Dependencies status](https://david-dm.org/BlackDice/lill/status.svg)](https://david-dm.org/BlackDice/lill#info=dependencies)[![devDependency Status](https://david-dm.org/BlackDice/lill/dev-status.svg)](https://david-dm.org/BlackDice/lill#info=devDependencies)
 
 [![NPM](https://nodei.co/npm/lill.png)](https://nodei.co/npm/lill/)
 
@@ -104,4 +104,4 @@ Due to simplicity of the solution, single object can be "owner" only once. Simil
 
 ## Tests
 
-LiLL is fully tested. You can check out the result of the tests at [Travis CI](https://travis-ci.org/FredyC/lill) or clone repository for yourself, run `npm install` first and then `npm test`.
+LiLL is fully tested. You can check out the result of the tests at [Travis CI](https://travis-ci.org/BlackDice/lill) or clone repository for yourself, run `npm install` first and then `npm test`.
