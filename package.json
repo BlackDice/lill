@@ -1,7 +1,7 @@
 {
   "name": "lill",
   "description": "Lightweight linked list implementation with small memory footprint.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "keywords": [
     "linked-list",
@@ -11,17 +11,14 @@
     "symbol",
     "lightweight"
   ],
-  "author": {
-    "name": "FredyC",
-    "email": "fredy.c@seznam.cz"
-  },
-  "homepage": "https://github.com/FredyC/lill",
+  "author": "FredyC <fredy.c@seznam.cz>",
+  "homepage": "https://github.com/BlackDice",
   "repository": {
     "type": "git",
-    "url": "git@github.com:FredyC/lill.git"
+    "url": "git@github.com:BlackDice/lill.git"
   },
   "bugs": {
-    "url": "https://github.com/FredyC/lill/issues"
+    "url": "https://github.com/BlackDice/lill/issues"
   },
   "main": "lib/lill.js",
   "scripts": {
