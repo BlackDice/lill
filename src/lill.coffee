@@ -112,7 +112,9 @@ checkAttached = (owner) ->
   throw new TypeError 'use LiLL.attach() method on owner object'
 
 checkItem = (owner, item, method) ->
-  unless item and typeof item is "object" and Object.isExtensible item
+  unless item and typeof item in ['object', 'function']
+    throw new TypeError "LiLL.#{method} needs an object or function to be added"
+  unless Object.isExtensible item
     throw new TypeError "LiLL.#{method} method needs an extensible item"
   if item[ sOwner ] and item[ sOwner ] isnt owner
     throw new TypeError "LiLL cannot #{method} item that is managed by another list"

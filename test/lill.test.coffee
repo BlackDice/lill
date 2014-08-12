@@ -37,15 +37,18 @@ describe 'Lill', ->
 
 	expectItem = (owner, fnName) ->
 		toThrow = (msg, fn) -> 
-			expect(fn).to.throw TypeError, /needs an extensible item/, msg
+			expect(fn).to.throw TypeError, /needs an object or function/, msg
 		toThrow 'void', -> Lill[fnName] owner
 		toThrow 'null', -> Lill[fnName] owner, null
 		toThrow 'number', -> Lill[fnName] owner, 1
 		toThrow 'bool', -> Lill[fnName] owner, true
 		toThrow 'string', -> Lill[fnName] owner, 'nothing'
-		toThrow 'prevented', -> Lill[fnName] owner, Object.preventExtensions({})
-		toThrow 'sealed', -> Lill[fnName] owner, Object.seal({})
-		toThrow 'frozen', -> Lill[fnName] owner, Object.freeze({})
+
+		toThrow2 = (msg, fn) -> 
+			expect(fn).to.throw TypeError, /needs an extensible item/, msg
+		toThrow2 'prevented', -> Lill[fnName] owner, Object.preventExtensions({})
+		toThrow2 'sealed', -> Lill[fnName] owner, Object.seal({})
+		toThrow2 'frozen', -> Lill[fnName] owner, Object.freeze({})
 
 	beforeEach ->
 		@owner = {}

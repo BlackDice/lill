@@ -1,6 +1,6 @@
 {
   "name": "lill",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "authors": [
     "FredyC <fredy.c@seznam.cz>"
   ],
@@ -20,7 +20,7 @@
     "lightweight"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/FredyC/lill",
+  "homepage": "https://github.com/BlackDice",
   "ignore": [
     "node_modules",
     "bin",
