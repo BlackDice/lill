@@ -1,7 +1,7 @@
 {
   "name": "lill",
   "description": "Lightweight linked list implementation with small memory footprint.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "license": "MIT",
   "keywords": [
     "linked-list",
@@ -22,7 +22,8 @@
   },
   "main": "lib/lill.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha"
+    "test": "node_modules/.bin/mocha",
+    "prepublish": "node bin/build.js"
   },
   "devDependencies": {
     "coffee-script": "^1.7.1",
