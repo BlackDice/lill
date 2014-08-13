@@ -131,6 +131,22 @@ describe 'Lill', ->
 			@add @thirdItem
 			expect(@thirdItem[ sPrev ]).to.equal @secondItem	
 
+	it 'should respond to has method', ->
+		expect(Lill).to.respondTo 'has'
+
+	describe 'has()', ->
+
+		it 'expects attached object in first argument', ->
+			expectAttached 'has'
+
+		it 'expects extensible object to check in second argument', ->
+			expectItem @owner, 'has'
+
+		it 'returns boolean to reflect if item is on the list', ->
+			expect(Lill.has @owner, @firstItem).to.be.false
+			@add @secondItem
+			expect(Lill.has @owner, @secondItem).to.be.true
+
 	it 'should respond to remove method', ->
 		expect(Lill).to.respondTo 'remove'
 

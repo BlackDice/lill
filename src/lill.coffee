@@ -56,6 +56,12 @@ add = (owner, item) ->
   data[ sSize ] += 1
   return owner
 
+has = (owner, item) ->
+  data = checkAttached owner
+  checkItem owner, item, 'has'
+
+  return item[ sOwner ] is owner
+
 remove = (owner, item) ->
   data = checkAttached owner
   checkItem owner, item, 'remove'
@@ -119,7 +125,7 @@ checkItem = (owner, item, method) ->
   if item[ sOwner ] and item[ sOwner ] isnt owner
     throw new TypeError "LiLL cannot #{method} item that is managed by another list"
 
-LiLL = {attach, detach, add, remove, getHead, getTail, getSize, each}
+LiLL = {attach, detach, add, has, remove, getHead, getTail, getSize, each}
 LiLL.sNext = sNext
 LiLL.sPrev = sPrev
 Object.freeze LiLL
