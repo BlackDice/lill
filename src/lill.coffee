@@ -3,34 +3,30 @@
 Symbol = require 'es6-symbol'
 
 sData = Symbol 'linked list related data'
-sHead = Symbol 'reference to start of the list'
-sTail = Symbol 'reference to end of the list'
-sSize = Symbol 'counter of items in the list'
-sNext = Symbol 'next item in linked list'
-sPrev = Symbol 'previous item in linked list'
 sOwner = Symbol 'owner of the item'
 
 attach = (owner) ->
   unless owner and typeof owner in ['object', 'function']
     throw new TypeError 'LiLL.attach needs an object or function'
+  if owner[ sData ]
+    throw new TypeError 'LiLL.attach cannot use already attached object'
   unless Object.isExtensible owner
     throw new TypeError 'LiLL.attach needs extensible object'
 
-  owner[ sData ] = data = Object.create null
-  data[ sHead ] = null
-  data[ sTail ] = null
-  data[ sSize ] = 0
+  owner[ sData ] = data =
+    id: Symbol 'identity of the list'
+    next: Symbol 'next item in linked list'
+    prev: Symbol 'previous item in linked list'
+    head: null
+    tail: null
+    size: 0
 
+  Object.seal data
   return owner
 
 detach = (owner) ->
   data = checkAttached owner
-  while item = data[ sHead ]
-    data[ sHead ] = item[ sNext ]
-    delete item[ sNext ]
-    delete item[ sPrev ]
-    delete item[ sOwner ]
-
+  clear owner
   delete owner[ sData ]
   return owner
 
@@ -38,79 +34,99 @@ add = (owner, item) ->
   data = checkAttached owner
   checkItem owner, item, 'add'
 
-  return owner if item[ sOwner ]
+  return owner if item[ data.id ] is owner
 
-  item[ sNext ] = item[ sPrev ] = null
-  item[ sOwner ] = owner
+  item[ data.next ] = item[ data.prev ] = null
+  item[ data.id ] = owner
 
-  unless data[ sHead ]
-    data[ sHead ] = data[ sTail ] = item
+  unless data.head
+    data.head = data.tail = item
   else
-    # Current last item points to added item
-    data[ sTail ][ sNext ] = item
+    # Current tail item points to added item
+    data.tail[ data.next ] = item
     # Added item points to the current tail
-    item[ sPrev ] = data[ sTail ]
-    # Tail point to added item
-    data[ sTail ] = item
+    item[ data.prev ] = data.tail
+    # Tail points to added item
+    data.tail = item
 
-  data[ sSize ] += 1
+  data.size += 1
   return owner
 
 has = (owner, item) ->
   data = checkAttached owner
   checkItem owner, item, 'has'
 
-  return item[ sOwner ] is owner
+  return item[ data.id ] is owner
 
 remove = (owner, item) ->
   data = checkAttached owner
   checkItem owner, item, 'remove'
 
-  return owner unless item[ sOwner ]
+  return owner unless item[ data.id ] is owner
 
   # Shift head since the current is being removed
-  if data[ sHead ] is item
-    data[ sHead ] = data[ sHead ][ sNext ]
+  if data.head is item
+    data.head = data.head[ data.next ]
 
   # Shift tail since the current is being removed
-  if data[ sTail ] is item
-    data[ sTail ] = data[ sTail ][ sPrev ]
+  if data.tail is item
+    data.tail = data.tail[ data.prev ]
 
   # Update neighbors
-  prev[ sNext ] = item[ sNext ] if prev = item[ sPrev ]
-  next[ sPrev ] = item[ sPrev ] if next = item[ sNext ]
+  prev[ data.next ] = item[ data.next ] if prev = item[ data.prev ]
+  next[ data.prev ] = item[ data.prev ] if next = item[ data.next ]
 
   # Cleanup of removed item
-  delete item[ sNext ]
-  delete item[ sPrev ]
-  delete item[ sOwner ]
+  delete item[ data.next ]
+  delete item[ data.prev ]
+  delete item[ data.id ]
 
-  data[ sSize ] -= 1
+  data.size -= 1
+  return owner
+
+clear = (owner) ->
+  data = checkAttached owner
+  while item = data.head
+    data.head = item[ data.next ]
+    delete item[ data.next ]
+    delete item[ data.prev ]
+    delete item[ data.id ]
+
+  data.head = data.tail = null
+  data.size = 0
   return owner
 
 getHead = (owner) ->
   data = checkAttached owner
-  return data[ sHead ]
+  return data.head
 
 getTail = (owner) ->
   data = checkAttached owner
-  return data[ sTail ]
+  return data.tail
+
+getNext = (owner, item) ->
+  data = checkAttached owner
+  return item?[ data.next ]
+
+getPrevious = (owner, item) ->
+  data = checkAttached owner
+  return item?[ data.prev ]
 
 getSize = (owner) ->
   data = checkAttached owner
-  return data[ sSize ]
+  return data.size
 
 each = (owner, cb, ctx) ->
   data = checkAttached owner
   unless typeof cb is 'function'
     throw new TypeError 'LiLL.each method expects callback function'
-  return unless item = data[ sHead ]
+  return unless item = data.head
 
   i = 0
   ctx or= cb
   loop
     cb.call ctx, item, i++
-    item = item[ sNext ]
+    item = item[ data.next ]
     break unless item
 
 checkAttached = (owner) ->
@@ -125,9 +141,12 @@ checkItem = (owner, item, method) ->
   if item[ sOwner ] and item[ sOwner ] isnt owner
     throw new TypeError "LiLL cannot #{method} item that is managed by another list"
 
-LiLL = {attach, detach, add, has, remove, getHead, getTail, getSize, each}
-LiLL.sNext = sNext
-LiLL.sPrev = sPrev
-Object.freeze LiLL
+LiLL = {
+  attach, detach
+  add, has, remove, clear
+  getHead, getTail
+  getNext, getPrevious
+  getSize, each
+}
 
-module.exports = LiLL
+module.exports = Object.freeze LiLL

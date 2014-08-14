@@ -4,7 +4,6 @@ sinon = require 'sinon'
 chai.use require 'sinon-chai'
 
 Lill = require '../src/lill'
-{sNext, sPrev} = Lill
 
 describe 'Lill', ->
 	
@@ -22,7 +21,7 @@ describe 'Lill', ->
 			toThrow 'void', -> Lill.attach()
 			toThrow 'null', -> Lill.attach null
 			toThrow 'number', -> Lill.attach 1
-			toThrow 'bool', -> Lill.attach true
+			toThrow 'bool', -> Lill.attach false
 			toThrow 'string', -> Lill.attach 'nothing'
 
 		it 'expect passed object to be extensible', ->
@@ -31,6 +30,10 @@ describe 'Lill', ->
 			toThrow 'prevented', -> Lill.attach Object.preventExtensions({})
 			toThrow 'sealed', -> Lill.attach Object.seal({})
 			toThrow 'frozen', -> Lill.attach Object.freeze({})
+
+		it 'forbids to use already attached object', ->
+			attached = Lill.attach {}
+			expect(-> Lill.attach attached).to.throw TypeError, /already attached/
 
 	expectAttached = (fnName) ->
 		expect(-> Lill[fnName]({})).to.throw TypeError, /attach/
@@ -41,7 +44,7 @@ describe 'Lill', ->
 		toThrow 'void', -> Lill[fnName] owner
 		toThrow 'null', -> Lill[fnName] owner, null
 		toThrow 'number', -> Lill[fnName] owner, 1
-		toThrow 'bool', -> Lill[fnName] owner, true
+		toThrow 'bool', -> Lill[fnName] owner, false
 		toThrow 'string', -> Lill[fnName] owner, 'nothing'
 
 		toThrow2 = (msg, fn) -> 
@@ -60,6 +63,8 @@ describe 'Lill', ->
 		@remove = (item) => Lill.remove @owner, item
 		@head = => Lill.getHead @owner
 		@tail = => Lill.getTail @owner
+		@next = (item) => Lill.getNext @owner, item
+		@prev = (item) => Lill.getPrevious @owner, item
 		@size = => Lill.getSize @owner
 
 	it 'should respond to add method', ->
@@ -76,21 +81,10 @@ describe 'Lill', ->
 		it 'returns owner object', ->
 			expect(@add @firstItem).to.equal @owner
 
-		it 'throws error if item is already on different list', ->
-			@add item = @firstItem
-			badOwner = {}
-			Lill.attach badOwner
-			expect(-> Lill.add badOwner, item).to.throw Error, /managed by another list/
-
-		it 'silently ignores item that is already on list', ->
+		it 'ignores item that is already on list', ->
 			@add @firstItem
 			@add @firstItem
 			expect(@size()).to.equal 1
-
-		it 'sets head and tail to first attached item', ->
-			@add @firstItem 
-			expect(@head()).to.equal @firstItem
-			expect(@tail()).to.equal @firstItem
 
 		it 'sets head to first added item', ->
 			@add @firstItem
@@ -98,6 +92,7 @@ describe 'Lill', ->
 
 		it 'sets tail to last added item', ->
 			@add @firstItem
+			expect(@tail()).to.equal @firstItem
 			@add @secondItem
 			expect(@tail()).to.equal @secondItem
 			@add @thirdItem
@@ -109,27 +104,27 @@ describe 'Lill', ->
 			@add @secondItem
 			expect(@size()).to.equal 2
 
-		it 'sets @@next and @@prev properties to null when only single item added', ->
+		it 'sets next and previous of item to null for single item present', ->
 			@add @firstItem
-			expect(@firstItem[ sNext ]).to.equal null
-			expect(@firstItem[ sPrev ]).to.equal null
+			expect(@next @firstItem).to.equal null
+			expect(@prev @firstItem).to.equal null
 
-		it 'sets @@next property to following item', ->
+		it 'sets next of item to following item', ->
 			@add @firstItem
 			@add @secondItem
-			expect(@firstItem[ sNext ]).to.equal @secondItem
-			expect(@secondItem[ sNext ]).to.equal null
+			expect(@next @firstItem).to.equal @secondItem
+			expect(@next @secondItem).to.equal null
 			@add @thirdItem
-			expect(@secondItem[ sNext ]).to.equal @thirdItem
-			expect(@thirdItem[ sNext ]).to.equal null
+			expect(@next @secondItem).to.equal @thirdItem
+			expect(@next @thirdItem).to.equal null
 
-		it 'sets @@prev property to previous item', ->
+		it 'sets prev of item to previous item', ->
 			@add @firstItem
 			@add @secondItem
-			expect(@firstItem[ sPrev ]).to.equal null
-			expect(@secondItem[ sPrev ]).to.equal @firstItem
+			expect(@prev @firstItem).to.equal null
+			expect(@prev @secondItem).to.equal @firstItem
 			@add @thirdItem
-			expect(@thirdItem[ sPrev ]).to.equal @secondItem	
+			expect(@prev @thirdItem).to.equal @secondItem	
 
 	it 'should respond to has method', ->
 		expect(Lill).to.respondTo 'has'
@@ -160,17 +155,11 @@ describe 'Lill', ->
 		it 'expects attached object in first argument', ->
 			expectAttached 'remove'
 
-		it 'expects extensible object to add in second argument', ->
+		it 'expects extensible object to remove in second argument', ->
 			expectItem @owner, 'remove'
 
 		it 'returns owner object', ->
 			expect(@remove @firstItem).to.equal @owner
-
-		it 'throws error if item is already on different list', ->
-			@add item = @firstItem
-			badOwner = {}
-			Lill.attach badOwner
-			expect(-> Lill.add badOwner, item).to.throw Error, /managed by another list/
 
 		it 'silently ignores item that is on the list', ->
 			@remove @firstItem
@@ -202,24 +191,24 @@ describe 'Lill', ->
 			@remove @thirdItem
 			expect(@size()).to.equal 0
 
-		it 'removes @@next and @@prev properties of removed item', ->
+		it 'removes next and prev from removed item', ->
 			@remove @secondItem
-			expect(@secondItem[ sNext ]).to.not.be.ok
-			expect(@secondItem[ sPrev ]).to.not.be.ok
+			expect(@next @secondItem).to.not.be.ok
+			expect(@prev @secondItem).to.not.be.ok
 
-		it 'sets @@next property of previous item to removed item\'s next', ->
+		it 'sets next of previous item to removed item\'s next', ->
 			@add extraItem = {extra: yes}
 			@remove @secondItem
-			expect(@firstItem[ sNext ]).to.equal @thirdItem
+			expect(@next @firstItem).to.equal @thirdItem
 			@remove @thirdItem
-			expect(@firstItem[ sNext ]).to.equal extraItem
+			expect(@next @firstItem).to.equal extraItem
 
-		it 'sets @@prev property of next item to removed item\'s previous', ->
+		it 'sets prev of next item to removed item\'s previous', ->
 			@add extraItem = {extra: yes}
 			@remove @thirdItem
-			expect(extraItem[ sPrev ]).to.equal @secondItem
+			expect(@prev extraItem).to.equal @secondItem
 			@remove @secondItem
-			expect(extraItem[ sPrev ]).to.equal @firstItem
+			expect(@prev extraItem).to.equal @firstItem
 
 	it 'should respond to getHead method', ->
 		expect(Lill).to.respondTo 'getHead'
@@ -236,6 +225,22 @@ describe 'Lill', ->
 
 		it 'expects attached object in first argument', ->
 			expectAttached 'getTail'
+
+	it 'should respond to getNext method', ->
+		expect(Lill).to.respondTo 'getNext'
+
+	describe 'getNext()', ->
+
+		it 'expects attached object in first argument', ->
+			expectAttached 'getNext'
+
+	it 'should respond to getPrevious method', ->
+		expect(Lill).to.respondTo 'getPrevious'
+
+	describe 'getPrevious()', ->
+
+		it 'expects attached object in first argument', ->
+			expectAttached 'getPrevious'
 
 	it 'should respond to each method', ->
 		expect(Lill).to.respondTo 'each'
@@ -292,6 +297,23 @@ describe 'Lill', ->
 		it 'returns number of items in the list', ->
 			expect(Lill.getSize @owner).to.equal 0
 
+	it 'should respond to clear method', ->
+		expect(Lill).to.respondTo 'clear'
+
+	describe 'clear()', ->
+
+		it 'expects attached object in first argument', ->
+			expectAttached 'clear'
+
+		it 'removes all items from the list', ->
+			@add @firstItem
+			@add @thirdItem
+			@add @secondItem
+			Lill.clear @owner
+			expect(@size()).to.equal 0
+			expect(Lill.has @owner, @secondItem).to.be.false
+			expect(@head()).to.not.be.ok
+
 	it 'should respond to detach method', ->
 		expect(Lill).to.respondTo 'detach'
 
@@ -300,11 +322,13 @@ describe 'Lill', ->
 		it 'expects attached object in first argument', ->
 			expectAttached 'detach'
 
-		it 'should remove all items from the list', ->
-			@add @firstItem
+		it 'resets owner object ', ->
+			@add @thirdItem
 			@add @secondItem
 			Lill.detach @owner
-			expect(@firstItem[ sNext ]).to.not.be.ok
-			expect(@firstItem[ sPrev ]).to.not.be.ok
-			expect(@secondItem[ sNext ]).to.not.be.ok
-			expect(@secondItem[ sPrev ]).to.not.be.ok
+			expect(@owner).to.eql {}
+			expect(@firstItem).to.eql {first: yes}
+
+		it 'allows to attach owner object again', ->
+			Lill.detach @owner
+			Lill.attach @owner

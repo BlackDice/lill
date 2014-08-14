@@ -6,9 +6,9 @@
 
 [![NPM](https://nodei.co/npm/lill.png)](https://nodei.co/npm/lill/)
 
-There are few implementation of the [linked-list structure](http://en.wikipedia.org/wiki/Linked_list), but most of them creates bunch of extra objects to store the information. I didn't like that so *LiLL* has been made.
+There are few implementation of the [linked-list structure](http://en.wikipedia.org/wiki/Linked_list), but most of them creates bunch of extra objects to store the information. We didn't like that so *LiLL* has been made.
 
-Linked list structure shines in situations when you need to iterate many objects very frequently while modifications of the list are not that frequent. One of the great use cases is in entity based systems used in game development.
+Linked list structure shines in situations when you need to iterate over some list very frequently while modifications of the list are not that frequent. Items of such list are simple linked together by referencing each other. This is much faster to iterate over than standard loops. 
 
 ## Using Symbol
 
@@ -16,9 +16,9 @@ LiLL is using new ES6 feature called [Symbols](http://tc39wiki.calculist.org/es6
 
 ### Warning about Symbol
 
-Please note, that Symbol is not officially supported by most of the environments so I had to use shim. I've chosen [es6-symbol](https://www.npmjs.org/package/es6-symbol) implementation. If you know about better one, feel free to send in pull request. This is also only runtime dependency. Hopefully it will not be needed one day ;)
+Please note, that Symbol is not officially supported by most of the environments so we had to use shim. Currently the [es6-symbol](https://www.npmjs.org/package/es6-symbol) implementation was chosen. If you know about better one, feel free to send in pull request. This is also only runtime dependency. Hopefully it will not be needed one day ;)
 
-There is one limitation coming from using shim thou. Symbols are still added as standard properties using string identifier. Therefore calling for example `Object.getOwnPropertyNames` will return properties made by Symbol. That's clearly against specification, but I do believe, there is no clean way how to overcome this.
+There is one limitation coming from using shim thou. Symbols are still added as standard properties using string identifier. Therefore calling for example `Object.getOwnPropertyNames` will return properties made by Symbol. That's clearly against specification, but we do believe, there is no clean way how to overcome this. We recommend to use LiLL just for objects that are not inspected on their properties.
 
 ## Installation
 
@@ -39,68 +39,76 @@ The `lib` folder contains various files:
 
 ## How to use LiLL
 
-First you need container object, I call it *owner*. It can be anything that is recognized as `object` or `function` by `typeof` operator (except `null` of course). Object has to pass the check by `Object.isExtensible()` too.
+First you need container object, We call it *owner*. It can be anything that is recognized as *object* or *function* by `typeof` operator (except *null* of course). On top of that, *owner* has to pass the check by `Object.isExtensible()`.
 
-	var Lill = require('lill')
+	var Lill = require 'lill'
 	var owner = {}
 	Lill.attach(owner) === owner
 
-LiLL is designed to not create any state objects. Small disadvantage of such solution is that you have to pass owner object to every operation method.
+LiLL is designed to not create any state objects. Small disadvantage of such solution is that you have to pass *owner* object to every operation method.
 
 ### Adding to the list
 
 To keep the memory footprint low, information about neighbors are stored on added item using Symbols. That means you can add only items capable of this. No primitive values allows that. You can use objects and functions.
 
-	var item = {foo: "bar"}
-	Lill.add(owner, item)
+	var item = foo: 'bar'
+	Lill.add owner, item
 
 ### Removing from the list
 
 This works very similar to adding. Previously added properties are completely removed from the item and neighbors are modified accordingly.
 
-	Lill.remove(owner, item)
+	Lill.remove owner, item
 
-### Accessing the list
+### Iterating the list
 
-Currently list supports only basic iteration, but this can be easily expanded and I am planning to do it in form of simple plugin system.
+Currently only basic iteration is supported and looks like this.
 
-Basically all added items keeps information about it's neighbors. You can access these information easily using public symbols. Note that values of these properties are not protected in any way and if you modify them, the list is practically broken.
+	iterate = (item, i) ->
+		# do your work with item
 
-	item[ Lill.sNext ]
-	item[ Lill.sPrev ]
+	Lill.each owner, iterate, optionalContext
 
-This is hardly enough. You probably want to know where the list begins or eventually where it ends. For this you have read-only access to so called head and tail.
+There is also internal counter of the items currently on the list. This can be used for example to randomly pick item from the list.
 
-	Lill.getHead(owner)
-	Lill.getTail(owner)
+	Lill.getSize owner
 
-Now you could iterate the list very easily like this
+### Accessing the items
 
-	var item = Lill.getHead(owner)
-	while (item) {
-		// do your work with the item
-		item = item[ sNext ]
-	}
+Every items on the list keeps information about it's neighbors. You can access these informations like this. 
 
-If you want more convenient way or maybe separate logic to the function, LiLL contains one easy to use method for this with little added bonus in form of 0-based index of item in the list.
+	Lill.getNext owner, item
+	Lill.getPrevious owner, item
 
-	function iterate(item, i) {
-		// do your work with item
-	}
+You might want to know where the list begins too. This works very similar.
 
-	Lill.each(owner, iterate, optionalContext)
+	Lill.getHead owner
+	Lill.getTail owner
 
-Finally there is also internal counter of the items currently on the list.
+Now you could iterate the list like this.
 
-	Lill.getSize(owner)
+	item = Lill.getHead owner
+	while item
+		# do your work with the item
+		item = Lill.getNext owner, item
+
+### Clearing the list
+
+To conveniently clear the list, just call the following.
+
+	Lill.clear owner
 
 ### Detach the list
 
-If you want to free up all resources used by LiLL connected to one owner, simply call `Lill.detach(owner)`.
+If you want remove all items from the list and pretty much dispose everything that LiLL was using, do it like this.
+
+	Lill.detach owner
+
+Detached object can be later attached again if you like. If you use any of the operation methods on detached object, error will be thrown.
 
 ## Known limitation
 
-Due to simplicity of the solution, single object can be "owner" only once. Similarly all items added to the list cannot be part of another linked list.
+Due to simplicity of the solution, single object can be "owner" only once. Item can be present in multiple lists without influencing each other.
 
 ## Tests
 
