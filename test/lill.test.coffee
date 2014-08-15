@@ -330,8 +330,8 @@ describe 'Lill', ->
 
 	describe 'detach()', ->
 
-		it 'expects attached object in first argument', ->
-			expectAttached 'detach'
+		it 'ignores object that attached', ->
+			expect(-> Lill.detach {}).to.not.throw
 
 		it 'allows to attach owner object again', ->
 			Lill.detach @owner
