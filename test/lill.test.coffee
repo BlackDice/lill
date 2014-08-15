@@ -86,6 +86,17 @@ describe 'Lill', ->
 			@add @firstItem
 			expect(@size()).to.equal 1
 
+		it 'allows to add item to multiple different lists', ->
+			owner2 = Lill.attach {owner: 2}
+			owner3 = Lill.attach {owner: 3}
+			@add @firstItem
+			Lill.add owner2, @firstItem
+			Lill.add owner3, @firstItem
+			expect(Lill.getSize @owner).to.equal 1
+			expect(Lill.getHead owner2).to.equal @firstItem
+			Lill.add owner3, @secondItem
+			expect(Lill.getNext owner3, @firstItem).to.equal @secondItem
+
 		it 'sets head to first added item', ->
 			@add @firstItem
 			expect(@head()).to.equal @firstItem
@@ -321,13 +332,6 @@ describe 'Lill', ->
 
 		it 'expects attached object in first argument', ->
 			expectAttached 'detach'
-
-		it 'resets owner object ', ->
-			@add @thirdItem
-			@add @secondItem
-			Lill.detach @owner
-			expect(@owner).to.eql {}
-			expect(@firstItem).to.eql {first: yes}
 
 		it 'allows to attach owner object again', ->
 			Lill.detach @owner
