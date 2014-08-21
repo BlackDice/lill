@@ -8,7 +8,7 @@
 
 There are few implementation of the [linked-list structure](http://en.wikipedia.org/wiki/Linked_list), but most of them creates bunch of extra objects to store the information. We didn't like that so *LiLL* has been made.
 
-Linked list structure shines in situations when you need to iterate over some list very frequently while modifications of the list are not that frequent. Items of such list are simple linked together by referencing each other. This is much faster to iterate over than standard loops. 
+Linked list structure shines in situations when you need to iterate over some list very frequently while modifications of the list are not that frequent. Items of such list are simple linked together by referencing each other. This is much faster to iterate over than standard loops.
 
 ## Using Symbol
 
@@ -75,7 +75,7 @@ There is also internal counter of the items currently on the list. This can be u
 
 ### Accessing the items
 
-Every items on the list keeps information about it's neighbors. You can access these informations like this. 
+Every items on the list keeps information about it's neighbors. You can access these informations like this.
 
 	Lill.getNext owner, item
 	Lill.getPrevious owner, item
@@ -105,6 +105,12 @@ If you want remove all items from the list and pretty much dispose everything th
 	Lill.detach owner
 
 Detached object can be later attached again if you like. If you use any of the operation methods on detached object, error will be thrown.
+
+### Check for attached object
+
+If you want to check if some object is used as owner by Lill, simply call this.
+
+	Lill.isAttached owner
 
 ## Known limitation
 

@@ -6,7 +6,7 @@ chai.use require 'sinon-chai'
 Lill = require '../src/lill'
 
 describe 'Lill', ->
-	
+
 	it 'should be a object', ->
 		expect(Lill).to.be.an "object"
 
@@ -16,7 +16,7 @@ describe 'Lill', ->
 	describe 'attach()', ->
 
 		it 'expects object in first argument argument', ->
-			toThrow = (msg, fn) -> 
+			toThrow = (msg, fn) ->
 				expect(fn).to.throw TypeError, /needs an object/, msg
 			toThrow 'void', -> Lill.attach()
 			toThrow 'null', -> Lill.attach null
@@ -25,7 +25,7 @@ describe 'Lill', ->
 			toThrow 'string', -> Lill.attach 'nothing'
 
 		it 'expect passed object to be extensible', ->
-			toThrow = (msg, fn) -> 
+			toThrow = (msg, fn) ->
 				expect(fn).to.throw TypeError, /needs extensible object/, msg
 			toThrow 'prevented', -> Lill.attach Object.preventExtensions({})
 			toThrow 'sealed', -> Lill.attach Object.seal({})
@@ -39,7 +39,7 @@ describe 'Lill', ->
 		expect(-> Lill[fnName]({})).to.throw TypeError, /attach/
 
 	expectItem = (owner, fnName) ->
-		toThrow = (msg, fn) -> 
+		toThrow = (msg, fn) ->
 			expect(fn).to.throw TypeError, /needs an object or function/, msg
 		toThrow 'void', -> Lill[fnName] owner
 		toThrow 'null', -> Lill[fnName] owner, null
@@ -47,7 +47,7 @@ describe 'Lill', ->
 		toThrow 'bool', -> Lill[fnName] owner, false
 		toThrow 'string', -> Lill[fnName] owner, 'nothing'
 
-		toThrow2 = (msg, fn) -> 
+		toThrow2 = (msg, fn) ->
 			expect(fn).to.throw TypeError, /needs an extensible item/, msg
 		toThrow2 'prevented', -> Lill[fnName] owner, Object.preventExtensions({})
 		toThrow2 'sealed', -> Lill[fnName] owner, Object.seal({})
@@ -135,7 +135,7 @@ describe 'Lill', ->
 			expect(@prev @firstItem).to.equal null
 			expect(@prev @secondItem).to.equal @firstItem
 			@add @thirdItem
-			expect(@prev @thirdItem).to.equal @secondItem	
+			expect(@prev @thirdItem).to.equal @secondItem
 
 	it 'should respond to has method', ->
 		expect(Lill).to.respondTo 'has'
@@ -178,7 +178,7 @@ describe 'Lill', ->
 			expect(@size()).to.equal 2
 
 		it 'sets head to next item when previous is removed', ->
-			@remove @firstItem 
+			@remove @firstItem
 			expect(@head()).to.equal @secondItem
 			@remove @secondItem
 			expect(@head()).to.equal @thirdItem
@@ -186,7 +186,7 @@ describe 'Lill', ->
 			expect(@head()).to.equal null
 
 		it 'sets tail to previous item when next one is removed', ->
-			@remove @thirdItem 
+			@remove @thirdItem
 			expect(@tail()).to.equal @secondItem
 			@remove @secondItem
 			expect(@tail()).to.equal @firstItem
@@ -263,7 +263,7 @@ describe 'Lill', ->
 
 		it 'expects callback function in second argument', ->
 			owner = @owner
-			toThrow = (msg, fn) -> 
+			toThrow = (msg, fn) ->
 				expect(fn).to.throw TypeError, /callback function/, msg
 			toThrow 'void', -> Lill.each owner
 			toThrow 'null', -> Lill.each owner, null
@@ -336,3 +336,16 @@ describe 'Lill', ->
 		it 'allows to attach owner object again', ->
 			Lill.detach @owner
 			Lill.attach @owner
+
+	it 'should respond to isAttached method', ->
+		expect(Lill).to.respondTo 'isAttached'
+
+	describe 'isAttached()', ->
+
+		it 'returns true for object attached by Lill', ->
+			obj = Lill.attach {}
+			expect(Lill.isAttached obj).to.be.true
+
+		it 'returns false for object not attached by Lill', ->
+			obj = {}
+			expect(Lill.isAttached obj).to.be.false

@@ -129,6 +129,9 @@ each = (owner, cb, ctx) ->
     item = item[ data.next ]
     break unless item
 
+isAttached = (owner) ->
+  return owner[ bData ]?
+
 checkAttached = (owner) ->
   return data if data = owner?[ bData ]
   throw new TypeError 'use LiLL.attach() method on owner object'
@@ -147,6 +150,7 @@ LiLL = {
   getHead, getTail
   getNext, getPrevious
   getSize, each
+  isAttached
 }
 
 module.exports = Object.freeze LiLL
