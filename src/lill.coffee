@@ -5,6 +5,8 @@ Symbol = require 'es6-symbol'
 bData = Symbol 'lill related data'
 bOwner = Symbol 'lill owner of item'
 
+idSequence = 0
+
 attach = (owner) ->
   unless owner and typeof owner in ['object', 'function']
     throw new TypeError 'LiLL.attach needs an object or function'
@@ -20,6 +22,9 @@ attach = (owner) ->
     head: null
     tail: null
     size: 0
+    id: idSequence
+
+  idSequence += 1
 
   Object.seal data
   return owner
@@ -120,14 +125,29 @@ each = (owner, cb, ctx) ->
   data = checkAttached owner
   unless typeof cb is 'function'
     throw new TypeError 'LiLL.each method expects callback function'
-  return unless item = data.head
 
   i = 0
-  ctx or= cb
+  return i unless item = data.head
+
+  iterator = if ctx isnt undefined
+    each$withContext
+  else
+    each$noContext
+
   loop
-    cb.call ctx, item, i++
-    item = item[ data.next ]
-    break unless item
+    # storing next item now for cases where badly written
+    # iterator function would modify the list
+    next = item[ data.next ]
+    iterator cb, item, i, ctx
+    break unless item = next
+    i += 1
+  return i
+
+each$noContext = (fn, item, i) ->
+    fn item, i
+
+each$withContext = (fn, item, i, ctx) ->
+    fn.call ctx, item, i
 
 isAttached = (owner) ->
   return owner[ bData ]?

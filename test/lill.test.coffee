@@ -291,6 +291,14 @@ describe 'Lill', ->
 			Lill.each @owner, spy
 			expect(spy.thirdCall.args).to.eql [@thirdItem, 2]
 
+		it 'avoids iterating items if list is changed during iteration', ->
+			@add @firstItem
+			called = 0
+			Lill.each @owner, =>
+				called += 1
+				@add @secondItem
+			expect(called).to.equal 1
+
 		it 'optionally accepts third argument being context for the callback function', ->
 			@add @firstItem
 			spy = sinon.spy()
