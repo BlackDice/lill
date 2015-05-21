@@ -130,9 +130,9 @@ each = (owner, cb, ctx) ->
   return i unless item = data.head
 
   iterator = if ctx isnt undefined
-    each$withContext
+    func$withContext
   else
-    each$noContext
+    func$noContext
 
   loop
     # storing next item now for cases where badly written
@@ -143,10 +143,32 @@ each = (owner, cb, ctx) ->
     i += 1
   return i
 
-each$noContext = (fn, item, i) ->
+
+find = (owner, predicate, ctx) ->
+  data = checkAttached owner
+  unless typeof predicate is 'function'
+    throw new TypeError 'LiLL.find method expects predicate function'
+
+  return null unless item = data.head
+
+  func = if ctx isnt undefined
+    func$withContext
+  else
+    func$noContext
+
+  i = 0
+  loop
+    next = item[ data.next ]
+    result = func predicate, item, i, ctx
+    return item if result is true
+    break unless item = next
+    i += 1
+  return null
+
+func$noContext = (fn, item, i) ->
     fn item, i
 
-each$withContext = (fn, item, i, ctx) ->
+func$withContext = (fn, item, i, ctx) ->
     fn.call ctx, item, i
 
 isAttached = (owner) ->
@@ -169,7 +191,7 @@ LiLL = {
   add, has, remove, clear
   getHead, getTail
   getNext, getPrevious
-  getSize, each
+  getSize, each, find
   isAttached
 }
 

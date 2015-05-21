@@ -305,6 +305,81 @@ describe 'Lill', ->
 			Lill.each @owner, spy, ctx = {}
 			expect(spy).to.be.calledOn ctx
 
+	it 'should respond to find method', ->
+		expect(Lill).to.respondTo 'find'
+
+	describe 'find()', ->
+
+		it 'expects attached object in first argument', ->
+			expectAttached 'find'
+
+		it 'expects predicate function in second argument', ->
+			owner = @owner
+			toThrow = (msg, fn) ->
+				expect(fn).to.throw TypeError, /predicate function/, msg
+			toThrow 'void', -> Lill.find owner
+			toThrow 'null', -> Lill.find owner, null
+			toThrow 'number', -> Lill.find owner, 1
+			toThrow 'bool', -> Lill.find owner, true
+			toThrow 'string', -> Lill.find owner, 'nothing'
+			toThrow 'string', -> Lill.find owner, {}
+			toThrow 'string', -> Lill.find owner, []
+
+		it 'predicate is not called if list is empty', ->
+			spy = sinon.spy()
+			Lill.find @owner, spy
+			expect(spy).to.not.have.been.called
+
+		it 'calls predicate for every item till true is returned', ->
+			@add @firstItem
+			@add @secondItem
+			@add @thirdItem
+			stub = sinon.stub()
+			stub.onSecondCall().returns(true)
+
+			Lill.find @owner, stub
+
+			expect(stub).to.have.been.calledTwice
+			expect(stub.firstCall.args).to.eql [@firstItem, 0]
+			expect(stub.secondCall.args).to.eql [@secondItem, 1]
+
+		it 'returns item that fulfills predicate', ->
+			@add @firstItem
+			@add @secondItem
+			@add @thirdItem
+			stub = sinon.stub()
+			stub.onThirdCall().returns(true)
+
+			result = Lill.find @owner, stub
+			expect(result).to.equal @thirdItem
+
+		it 'returns null if predicate is not fulfilled', ->
+			@add @firstItem
+			@add @secondItem
+			@add @thirdItem
+			stub = sinon.stub()
+			stub.returns(false)
+			stub.onFirstCall().returns(undefined)
+
+			result = Lill.find @owner, stub
+			expect(result).to.equal null
+
+		it 'skips calling predicate for items added during iteration', ->
+			@add @firstItem
+			called = 0
+			Lill.find @owner, =>
+				called += 1
+				@add @secondItem
+				return true
+			expect(called).to.equal 1
+
+		it 'optionally accepts third argument being context for the predicate function', ->
+			@add @firstItem
+			spy = sinon.spy()
+			Lill.find @owner, spy, ctx = {}
+			expect(spy).to.be.calledOn ctx
+
+
 	it 'should respond to getSize method', ->
 		expect(Lill).to.respondTo 'getSize'
 

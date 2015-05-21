@@ -88,8 +88,23 @@ var iterate = function (item, i) {
 
 Lill.each(owner, iterate, optionalContext);
 ```
-	
+
 Be warned that you should **not modify the list** during iterator invocation as it may cause unexpected behavior. This comes from nature of linked list structure as any changes in the chain of items could break iteration.
+
+### Finding item in the list ###
+
+If you are looking for a particular item, using each means that it will iterate over every item. Using `find` quits the loop once the predicate function returns `true`. If no predicate is fulfilled, the `null` is returned.
+
+```js
+	var predicate = function (item, i) {
+		if (item.name == "correct") {
+			return true;
+		}
+	};
+	
+	item = Lill.find(owner, predicate, optionalContext);
+	item.name == "correct" // true
+```
 
 ### Number of items in list
 
