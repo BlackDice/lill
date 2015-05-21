@@ -26,15 +26,15 @@
     "prepublish": "node bin/build.js"
   },
   "devDependencies": {
-    "coffee-script": "^1.7.1",
-    "chai": "^1.9.1",
-    "mocha": "^1.21.3",
-    "sinon-chai": "^2.5.0",
+    "browserify": "^10.2.1",
+    "chai": "^2.3.0",
+    "coffee-script": "^1.9.2",
+    "mocha": "^2.2.5",
     "sinon": "^1.10.3",
-    "uglify-js": "^2.4.15",
-    "browserify": "^5.9.1"
+    "sinon-chai": "^2.7.0",
+    "uglify-js": "^2.4.15"
   },
   "dependencies": {
-    "es6-symbol": "^0.1.0"
+    "es6-symbol": "^2.0.1"
   }
 }
