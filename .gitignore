@@ -3,3 +3,5 @@ node_modules
 desktop.ini
 *.sublime-workspace
 npm-debug.log
+
+lib
