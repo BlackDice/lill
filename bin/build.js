@@ -2,62 +2,74 @@
 
 var fs         = require('fs');
 var path       = require('path');
-var uglifyjs   = require('uglify-js');
-var browserify = require('browserify');
-var banner     = fs.readFileSync(__dirname + '/../LICENSE').toString()
-var src        = __dirname + '/../src/lill.coffee';
-var target     = __dirname + '/../lib/lill';
+var name       = 'lill';
+var src        = path.resolve(__dirname + '/../src/' + name + '.js');
+var target     = path.resolve(__dirname + '/../lib');
+var dist       = path.resolve(__dirname + '/../dist');
 var pkg        = require('../package.json');
 
-function minify(source) {
-  var opts = { fromString: true, mangle: {
-    toplevel: true
-  }};
-  return uglifyjs.minify(source, opts).code;
-}
-
-var bannerLines = banner.split("\n");
+var bannerSource = fs.readFileSync(__dirname + '/../LICENSE').toString()
+var bannerLines = bannerSource.split('\n');
 for (var i = 0, ii = bannerLines.length; i < ii; i++) {
-  bannerLines[i] = "* " + bannerLines[i]
+  bannerLines[i] = '* ' + bannerLines[i]
 };
-bannerLines.unshift("/*");
-bannerLines.push("* ", "* Version: "+pkg['version'], "*/", "");
-banner = bannerLines.join("\n");
+bannerLines.unshift('/*!');
+bannerLines.push('* ', '* Version: ' + pkg['version'], '*/', '');
+var banner = bannerLines.join('\n');
 
-var writeOut = function (suffix, content, cb) {
-  var fileName = path.resolve(target + suffix);
-  fs.writeFile(fileName, content, function(err) {
-    if (err) {
-      console.log("Error while writing to: ", fileName);
-      console.error(err.stack || err);
-    }
-    else {
-      console.log('Written file '+fileName);
-    }
-    cb && cb();
-  });
+var logFile = function(fileName) {
+  console.log('written file ' + fileName);
 }
 
-var coffee = require('coffee-script');
-var compiled = coffee.compile(fs.readFileSync(src).toString(), {
-  bare: true
-});
-writeOut('.js', banner + compiled, function() {
+var babel = require('babel-core');
+var transformed = babel.transformFileSync(src);
+var libFileName = path.join(target, name + '.js');
+fs.writeFileSync(libFileName, banner + transformed.code);
+logFile(libFileName);
 
-  var bundleOptions = {
-    entries: target + '.js',
-    standalone: 'lill',
-  };
+var webpack = require('webpack');
 
-  browserify(bundleOptions).bundle(function(err, buf) {
+(runWebpack = function(minified) {
+  webpack({
+    entry: src,
+    output: {
+      path: dist,
+      pathinfo: !minified,
+      filename: name + (minified ? '.min' : '') + '.js',
+      library: 'LiLL',
+      libraryTarget: 'umd',
+      umdNamedDefine: true,
+    },
+    module: {
+      loaders: [
+        { test: /\.js$/, loader: 'babel', include: /src/ },
+      ],
+    },
+    devtool: (minified ? 'source-map' : null) ,
+    plugins: [
+      new webpack.optimize.OccurenceOrderPlugin(),
+      new webpack.BannerPlugin(bannerSource),
+    ].concat(minified ? [new webpack.optimize.UglifyJsPlugin({
+        compress: { warnings: false }
+    })] : [])
+  }, (err, stats) => {
     if (err) {
-      console.log("Error during bundling");
-      return console.error(err.stack || err);
+      throw err;
     }
-    var out = buf.toString();
-    writeOut('-browser.js', out);
-    writeOut('-browser.min.js', banner + minify(out));
+    if (stats.hasErrors()) {
+      return console.log(stats.toString({
+        colors: true,
+        errorDetails: true,
+      }))
+    }
+    var files = stats.toJson().assetsByChunkName['main'];
+    if (!Array.isArray(files)) {
+      files = [files];
+    }
+    files.forEach(function(file) {
+      logFile(path.join(dist, file));
+    });
   });
-});
+})();
 
-writeOut('.min.js', banner + minify(compiled));
+runWebpack(true);

@@ -12,41 +12,27 @@ The linked list data structure really shines in situations when you frequently n
 
 ## Built With Symbol
 
-LiLL is using new ES6 feature called [Symbol](http://tc39wiki.calculist.org/es6/symbols/). This primitive makes it possible to store the linked list's metadata on original objects beinglinked together. There are no collisions in property names and it doesn't interfere with your objects in any way. You can see this library as **proof-of-concept** of how can new *Symbol* be used.
-
-### A Warning About Symbol
-
-Please note, that *Symbol* is not officially supported by most of the environments yet. As such LiLL shims this functionality with [es6-symbol](https://www.npmjs.org/package/es6-symbol). If you know about better one, feel free to send in pull request. This is also **only runtime dependency**. Hopefully it will not be needed one day ;)
-
-There is one notable limitation associated with this shim; Symbols are still assigned using the *String* primative. Therefore calling for example `Object.getOwnPropertyNames()` will return properties made by *Symbol*. This is a violation of the specification, but unfortunately there isn't a clean way to address this without native Symbol support. We recommend that you only use LiLL in situations where you won't be itterating over all of an object's properties.
+LiLL is using new ES6/ES2015 feature called [Symbol](http://tc39wiki.calculist.org/es6/symbols/). This primitive makes it possible to store the linked list's metadata on original objects being linked together. There are no collisions in property names and it doesn't interfere with your objects in any way. You can see this library as **proof-of-concept** of how can new *Symbol* be used.
 
 ## Installation
-
 
 ### Node.js
 
 To use LiLL in a Node environment simply run:
 
 ```bash
-npm install lill
+npm install -S lill
 ```
 
-and require *lill* in your application.
+and `require('lill')` in your application. This file is built using [BabelJS](http://babeljs.io/) to make code compatible with ES5 environment. For use in ES6 environment you can use `require('lill/es6')`.
 
 ### Browser
 
-If you are using Bower then run:
+The `dist` folder [in the repository](https://github.com/BlackDice/lill/tree/master/dist) contains these files:
 
-```bash
-bower install lill
-```
-
-The `lib` folder contains various files:
-
- * lill.js - plain JS compiled from source coffee file
+ * lill.js - UMD bundle for direct use in a browser with dependencies
  * lill.min.js - same as above just minified
- * lill-browser.js - browserified bundle packed with dependencies
- * lill-browser.min.js - minified version of the above file
+ * lill-min.js.map - optional source map for minified file
 
 ## How to use LiLL
 

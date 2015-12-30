@@ -1,8 +1,7 @@
 node_modules
 bin
-src
+dist
 test
 lill.sublime-*
 .travis.yml
 .gitignore
-bower.json

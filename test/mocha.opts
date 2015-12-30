@@ -1,4 +1,3 @@
 --reporter spec
 --check-leaks
 --ui bdd
---compilers coffee:coffee-script/register
