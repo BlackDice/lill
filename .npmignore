@@ -5,4 +5,3 @@ test
 lill.sublime-*
 .travis.yml
 .gitignore
-bower.json
