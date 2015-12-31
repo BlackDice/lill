@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 chai.use(sinonChai);
 
-import Lill from '../lib/lill';
+import Lill from '../src/lill';
 
 describe('Lill', function() {
 
@@ -469,12 +469,48 @@ describe('Lill', function() {
     });
 
     it('optionally accepts third argument being context for the predicate function', function() {
-      var ctx, spy;
+      const spy = sinon.spy();
+      const ctx = {};
       this.add(this.firstItem);
-      spy = sinon.spy();
-      Lill.find(this.owner, spy, ctx = {});
+      Lill.find(this.owner, spy, ctx);
       expect(spy).to.be.calledOn(ctx);
     });
+  });
+
+  it('should respond to iterate method', function() {
+    expect(Lill).to.respondTo('iterate');
+  });
+
+  describe('iterate()', function() {
+
+    it('expects attached object in first argument', function() {
+      expectAttached('iterate');
+    });
+
+    it('returns iterable object', function() {
+      const iterable = Lill.iterate(this.owner);
+      expect(iterable).to.be.an('object');
+      expect(iterable[Symbol.iterator]).to.be.an('function');
+    });
+
+    it('iterates over linked items', function() {
+      const expectIterable = (items) => {
+        const actual = Array.from(Lill.iterate(this.owner));
+        expect(actual).to.eql(items);
+      }
+
+      expectIterable([]);
+
+      this.add(this.firstItem);
+      expectIterable([this.firstItem]);
+
+      this.add(this.secondItem);
+      expectIterable([this.firstItem, this.secondItem]);
+
+      this.remove(this.firstItem);
+      expectIterable([this.secondItem]);
+    });
+
   });
 
   it('should respond to getSize method', function() {

@@ -207,6 +207,24 @@ export function find(owner, predicate, ctx) {
   return null;
 };
 
+export function iterate(owner) {
+  const data = validateAttached(owner);
+
+  let item = data.head;
+  const next = () => {
+    if (!item) {
+      return { done: true };
+    }
+    const result = { done: false, value: item };
+    item = item[data.bNext];
+    return result;
+  }
+
+  return {[Symbol.iterator]() {
+    return { next }
+  }};
+}
+
 export function isAttached(owner) {
   return owner != null && owner[bData] != null;
 }
