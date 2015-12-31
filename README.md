@@ -16,23 +16,19 @@ LiLL is using new ES6/ES2015 feature called [Symbol](http://tc39wiki.calculist.o
 
 ## Installation
 
-### Node.js
+You can download [UMD](https://github.com/umdjs/umd) package ready to be used. Library is available under the name of *LiLL* (when using AMD or global variable).
 
-To use LiLL in a Node environment simply run:
+[Dowload UMD package](https://raw.githubusercontent.com/BlackDice/lill/master/dist/lill.js)
+
+[Download minified UMD package](https://raw.githubusercontent.com/BlackDice/lill/master/dist/lill.min.js) + [source map](https://raw.githubusercontent.com/BlackDice/lill/master/dist/lill.min.js.map)
+
+LiLL is also available as NPM module which is pure CommonJS usable mainly in NodeJS environment or with Webpack/Browserify bundling.
 
 ```bash
 npm install -S lill
 ```
 
-and `require('lill')` in your application. This file is built using [BabelJS](http://babeljs.io/) to make code compatible with ES5 environment. For use in ES6 environment you can use `require('lill/es6')`.
-
-### Browser
-
-The `dist` folder [in the repository](https://github.com/BlackDice/lill/tree/master/dist) contains these files:
-
- * lill.js - UMD bundle for direct use in a browser with dependencies
- * lill.min.js - same as above just minified
- * lill-min.js.map - optional source map for minified file
+Module used with `require('lill')` call is built using [BabelJS](http://babeljs.io/) to make code compatible with ES5 environment. For use in ES6 environment you can use `require('lill/es6')`. You can also check included [.babelrc](.babelrc) file to check on what features need to be supported by your environment.
 
 ## How to use LiLL
 
