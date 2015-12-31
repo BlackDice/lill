@@ -2,7 +2,7 @@
 
 *Lightweight linked list implementation with a small memory footprint.*
 
-[![Build Status](https://travis-ci.org/BlackDice/lill.svg)](https://travis-ci.org/BlackDice/lill)[![Dependencies status](https://david-dm.org/BlackDice/lill/status.svg)](https://david-dm.org/BlackDice/lill#info=dependencies)[![devDependency Status](https://david-dm.org/BlackDice/lill/dev-status.svg)](https://david-dm.org/BlackDice/lill#info=devDependencies)
+[![Build Status](https://travis-ci.org/BlackDice/lill.svg)](https://travis-ci.org/BlackDice/lill)[![Dependencies status](https://david-dm.org/BlackDice/lill/status.svg)](https://david-dm.org/BlackDice/lill#info=dependencies)[![devDependency Status](https://david-dm.org/BlackDice/lill/dev-status.svg)](https://david-dm.org/BlackDice/lill#info=devDependencies)[![Code Climate](https://codeclimate.com/github/BlackDice/lill/badges/gpa.svg)](https://codeclimate.com/github/BlackDice/lill)
 
 [![NPM](https://nodei.co/npm/lill.png)](https://nodei.co/npm/lill/)
 
