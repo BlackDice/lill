@@ -1,7 +1,6 @@
-node_modules
-bin
-dist
-test
-lill.sublime-*
-.travis.yml
-.gitignore
+node_modules/
+test/
+
+.*
+rollup.config.js
+yarn*
