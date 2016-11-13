@@ -1,7 +1,4 @@
-node_modules
-.DS_Store
-desktop.ini
-*.sublime-workspace
-npm-debug.log
-
-lib
+node_modules/
+dist/lill.js
+npm*
+yarn*

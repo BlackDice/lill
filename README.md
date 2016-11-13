@@ -2,33 +2,23 @@
 
 *Lightweight linked list implementation with a small memory footprint.*
 
-[![Build Status](https://travis-ci.org/BlackDice/lill.svg)](https://travis-ci.org/BlackDice/lill)[![Dependencies status](https://david-dm.org/BlackDice/lill/status.svg)](https://david-dm.org/BlackDice/lill#info=dependencies)[![devDependency Status](https://david-dm.org/BlackDice/lill/dev-status.svg)](https://david-dm.org/BlackDice/lill#info=devDependencies)[![Code Climate](https://codeclimate.com/github/BlackDice/lill/badges/gpa.svg)](https://codeclimate.com/github/BlackDice/lill)
+[![Build Status](https://travis-ci.org/BlackDice/lill.svg)](https://travis-ci.org/BlackDice/lill)[![Code Climate](https://codeclimate.com/github/BlackDice/lill/badges/gpa.svg)](https://codeclimate.com/github/BlackDice/lill)
 
-[![NPM](https://nodei.co/npm/lill.png)](https://nodei.co/npm/lill/)
-
-There are few implementation of the [linked-list structure](http://en.wikipedia.org/wiki/Linked_list) in the JavaScript ecosystem, but most of them create a bunch of extra objects to store metadata about the list. We didn't liked that, so we created *LiLL*.
+There are few implementation of the [linked-list structure](http://en.wikipedia.org/wiki/Linked_list) in the JavaScript ecosystem, but most of them create a bunch of extra objects to store metadata about the list. We didn't like that, so we created *LiLL*.
 
 The linked list data structure really shines in situations when you frequently need to iterate over a list of items, but only modify the list's structure infrequently. Linked lists are ordered simply by having each object in the list reference its previous and next siblings. Linked lists are much faster to iterate over than standard loops.
 
 ## Built With Symbol
 
-LiLL is using new ES6/ES2015 feature called [Symbol](http://tc39wiki.calculist.org/es6/symbols/). This primitive makes it possible to store the linked list's metadata on original objects being linked together. There are no collisions in property names and it doesn't interfere with your objects in any way. You can see this library as **proof-of-concept** of how can new *Symbol* be used.
+LiLL is using new ES6/ES2015 feature called [Symbol](http://tc39wiki.calculist.org/es6/symbols/). This primitive makes it possible to store the linked list's metadata on original objects being linked together. There are no collisions in property names and it doesn't interfere with your objects in any way. If you dislike mutating your objects in any way, this library isn't for you.
 
 ## Installation
 
-You can download [UMD](https://github.com/umdjs/umd) package ready to be used. Library is available under the name of *LiLL* (when using AMD or global variable).
+LiLL is available as ES5 compatible NPM module without any additional dependencies.
 
-[Dowload UMD package](https://raw.githubusercontent.com/BlackDice/lill/master/dist/lill.js)
+[![NPM](https://nodei.co/npm/lill.png)](https://www.npmjs.com/package/lill)
 
-[Download minified UMD package](https://raw.githubusercontent.com/BlackDice/lill/master/dist/lill.min.js) + [source map](https://raw.githubusercontent.com/BlackDice/lill/master/dist/lill.min.js.map)
-
-LiLL is also available as NPM module which is pure CommonJS usable mainly in NodeJS environment or with Webpack/Browserify bundling.
-
-```bash
-npm install -S lill
-```
-
-Module used with `require('lill')` call is built using [BabelJS](http://babeljs.io/) to make code compatible with ES5 environment. For use in ES6 environment you can use `require('lill/es6')`. You can also check included [.babelrc](.babelrc) file to check on what features need to be supported by your environment.
+You will need to polyfill ES6 Symbol if using library in older environments like IE.
 
 ## How to use LiLL
 

@@ -1,0 +1,22 @@
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+  eslint:
+    enabled: true
+    channel: "eslint-3"
+    checks:
+      import/no-unresolved:
+        enabled: false
+      import/extensions:
+        enabled: false
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "src/*.js"
+exclude_paths:
+- "test/"
+- "build/"
