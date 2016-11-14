@@ -2,7 +2,8 @@
 
 *Lightweight linked list implementation with a small memory footprint.*
 
-[![Build Status](https://travis-ci.org/BlackDice/lill.svg)](https://travis-ci.org/BlackDice/lill)[![Code Climate](https://codeclimate.com/github/BlackDice/lill/badges/gpa.svg)](https://codeclimate.com/github/BlackDice/lill)
+[![Build Status](https://travis-ci.org/BlackDice/lill.svg)](https://travis-ci.org/BlackDice/lill)[![Code Climate](https://codeclimate.com/github/BlackDice/lill/badges/gpa.svg)](https://codeclimate.com/github/BlackDice/lill)![Greenkeeper Badge](https://badges.greenkeeper.io/BlackDice/lill.svg)
+
 
 There are few implementation of the [linked-list structure](http://en.wikipedia.org/wiki/Linked_list) in the JavaScript ecosystem, but most of them create a bunch of extra objects to store metadata about the list. We didn't like that, so we created *LiLL*.
 
