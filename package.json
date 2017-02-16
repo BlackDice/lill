@@ -34,7 +34,7 @@
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "eslint": "^3.10.0",
-    "eslint-config-blackdice": "^0.1.0",
+    "eslint-config-blackdice": "^0.2.0",
     "mocha": "^3.1.2",
     "publish-please": "^2.2.0",
     "rollup": "^0.41.1",
