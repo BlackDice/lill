@@ -82,12 +82,12 @@ describe('Lill', () => {
 		this.secondItem = { second: true }
 		this.thirdItem = { third: true }
 
-		this.add = item => Lill.add(this.owner, item)
-		this.remove = item => Lill.remove(this.owner, item)
+		this.add = (item) => Lill.add(this.owner, item)
+		this.remove = (item) => Lill.remove(this.owner, item)
 		this.head = () => Lill.getHead(this.owner)
 		this.tail = () => Lill.getTail(this.owner)
-		this.next = item => Lill.getNext(this.owner, item)
-		this.prev = item => Lill.getPrevious(this.owner, item)
+		this.next = (item) => Lill.getNext(this.owner, item)
+		this.prev = (item) => Lill.getPrevious(this.owner, item)
 		this.size = () => Lill.getSize(this.owner)
 	})
 
