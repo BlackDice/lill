@@ -66,12 +66,14 @@ export function add(owner, item) {
 	}
 
 	// initial state of the item
-	item[data.bNext] = item[data.bPrev] = bEmpty
+	item[data.bNext] = bEmpty
+	item[data.bPrev] = bEmpty
 	item[data.bOwner] = owner
 
 	// no head means there are no items at all
 	if (data.head === bEmpty) {
-		data.head = data.tail = item
+		data.head = item
+		data.tail = item
 	} else {
 		// item on the tail will link with new item
 		data.tail[data.bNext] = item
@@ -158,7 +160,8 @@ export function clear(owner) {
 		item = nextItem
 	}
 
-	data.head = data.tail = bEmpty
+	data.head = bEmpty
+	data.tail = bEmpty
 	data.size = EMPTY_LIST_SIZE
 
 	return owner
