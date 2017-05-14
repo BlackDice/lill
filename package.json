@@ -35,7 +35,7 @@
     "chai": "^3.5.0",
     "eslint": "^3.14.0",
     "eslint-config-blackdice": "^0.2.0",
-    "mocha": "^3.1.2",
+    "mocha": "^3.4.0",
     "publish-please": "^2.2.0",
     "rollup": "^0.41.1",
     "rollup-plugin-babel": "^2.6.1",
