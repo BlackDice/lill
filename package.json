@@ -37,7 +37,7 @@
     "eslint-config-blackdice": "^0.2.0",
     "mocha": "^3.1.2",
     "publish-please": "^2.2.0",
-    "rollup": "^0.41.1",
+    "rollup": "^0.42.0",
     "rollup-plugin-babel": "^2.6.1",
     "sinon": "^2.1.0",
     "sinon-chai": "^2.7.0"
